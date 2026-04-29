@@ -19,7 +19,7 @@ export default function About() {
             className="max-w-3xl"
           >
             <span className="inline-block text-brand-yellow font-bold tracking-widest uppercase text-sm mb-4">Tentang Kami</span>
-            <h1 className="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter mb-6 leading-tight">
+            <h1 className="font-sans font-extrabold text-4xl sm:text-5xl md:text-6xl uppercase tracking-tighter mb-6 leading-tight">
               Lebih Dari Sekadar <br/> <span className="text-brand-yellow">Showroom Motor</span>
             </h1>
             <p className="text-gray-400 text-lg md:text-xl leading-relaxed">
@@ -33,7 +33,7 @@ export default function About() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-brand-black mb-6">Dedikasi Untuk <br/> Kualitas Terbaik</h2>
+            <h2 className="font-sans font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-brand-black mb-6">Dedikasi Untuk <br/> Kualitas Terbaik</h2>
             <div className="space-y-6 text-gray-600 leading-relaxed text-lg">
               <p>
                 Berawal dari kecintaan kami terhadap otomotif, Sammy Motor didirikan dengan standar tinggi. Kami menyadari bahwa membeli motor bekas seringkali disertai dengan keraguan tentang kondisi mesin dan keaslian dokumen.
@@ -45,11 +45,11 @@ export default function About() {
             
             <div className="mt-10 grid grid-cols-2 gap-8">
               <div>
-                <h4 className="font-display font-extrabold text-4xl text-brand-black mb-2">10+</h4>
+                <h4 className="font-sans font-extrabold text-4xl text-brand-black mb-2">10+</h4>
                 <p className="text-sm font-bold text-gray-500 uppercase tracking-wider">Tahun Pengalaman</p>
               </div>
               <div>
-                <h4 className="font-display font-extrabold text-4xl text-brand-black mb-2">5000+</h4>
+                <h4 className="font-sans font-extrabold text-4xl text-brand-black mb-2">5000+</h4>
                 <p className="text-sm font-bold text-gray-500 uppercase tracking-wider">Pelanggan Puas</p>
               </div>
             </div>
@@ -71,7 +71,7 @@ export default function About() {
       <section className="bg-white py-24 border-y border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-brand-black mb-4">Pilar Kepercayaan Kami</h2>
+            <h2 className="font-sans font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-brand-black mb-4">Pilar Kepercayaan Kami</h2>
             <p className="text-gray-500 text-lg">Prinsip bisnis yang kami pegang teguh untuk menjaga kepercayaan Anda.</p>
           </div>
           
@@ -96,7 +96,7 @@ export default function About() {
 
       {/* CTA */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
-        <h2 className="font-display font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-brand-black mb-6">Siap Menemukan Motor Impian Anda?</h2>
+        <h2 className="font-sans font-extrabold text-3xl sm:text-4xl uppercase tracking-tight text-brand-black mb-6">Siap Menemukan Motor Impian Anda?</h2>
         <p className="text-gray-500 text-lg mb-10 max-w-2xl mx-auto">Tim kami siap membantu Anda memilih unit yang paling sesuai dengan kebutuhan dan budget Anda. Kunjungi showroom kami atau lihat stok secara online.</p>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <Link to="/katalog" className="bg-brand-black text-white px-8 py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-black w-full sm:w-auto shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
