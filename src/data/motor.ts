@@ -33,7 +33,7 @@ export const motors: Motor[] = [
   {
     id: "m-002",
     brand: "Honda",
-    model: "Vario 160 CBS",
+    model: "Vario 160 CBSS",
     year: 2023,
     price: 24000000,
     mileage: 8200,
