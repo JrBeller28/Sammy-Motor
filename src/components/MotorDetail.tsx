@@ -1,4 +1,4 @@
-import { ArrowLeft, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { Motor } from "../data/motors";
 import { formatCurrency } from "../utils/format";
@@ -15,12 +15,34 @@ export function MotorDetail({ motor, onBack }: MotorDetailProps) {
   const [showBooking, setShowBooking] = useState(false);
   const [selectedDp, setSelectedDp] = useState(motor.minDp);
   const [activeImageIdx, setActiveImageIdx] = useState(0);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const imagesList = motor.images && motor.images.length > 0 ? motor.images : [motor.image];
 
   const handleBookClick = (dp: number) => {
     setSelectedDp(dp);
     setShowBooking(true);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    
+    if (imagesList.length > 1) {
+      if (isLeftSwipe) {
+        setActiveImageIdx(prev => prev === imagesList.length - 1 ? 0 : prev + 1);
+      } else if (isRightSwipe) {
+        setActiveImageIdx(prev => prev === 0 ? imagesList.length - 1 : prev - 1);
+      }
+    }
+    setTouchStart(null);
   };
 
   return (
@@ -42,19 +64,39 @@ export function MotorDetail({ motor, onBack }: MotorDetailProps) {
           <div className="grid md:grid-cols-2 lg:grid-cols-5">
             {/* Left Col: Image & Description */}
             <div className="lg:col-span-3">
-              <div className="relative h-64 md:h-[500px] bg-gray-100">
-                <img src={imagesList[activeImageIdx]} alt={motor.model} className="w-full h-full object-cover" />
+              <div 
+                className="relative h-64 md:h-[500px] bg-gray-100 group"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+              >
+                <img src={imagesList[activeImageIdx]} alt={motor.model} className="w-full h-full object-cover transition-opacity duration-300" />
                 
                 {imagesList.length > 1 && (
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                    {imagesList.map((_, idx) => (
+                  <>
+                    <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between px-4 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                       <button 
-                        key={idx}
-                        onClick={() => setActiveImageIdx(idx)}
-                        className={`w-3 h-3 rounded-full border border-white shadow-sm transition-all ${idx === activeImageIdx ? 'bg-brand-yellow w-8' : 'bg-white/50 hover:bg-white'}`}
-                      />
-                    ))}
-                  </div>
+                        onClick={() => setActiveImageIdx(prev => prev === 0 ? imagesList.length - 1 : prev - 1)}
+                        className="bg-black/50 text-white p-2 rounded-full hover:bg-black/70 backdrop-blur-sm transition"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button 
+                        onClick={() => setActiveImageIdx(prev => prev === imagesList.length - 1 ? 0 : prev + 1)}
+                        className="bg-black/50 text-white p-2 rounded-full hover:bg-black/70 backdrop-blur-sm transition"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </div>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                      {imagesList.map((_, idx) => (
+                        <button 
+                          key={idx}
+                          onClick={() => setActiveImageIdx(idx)}
+                          className={`w-3 h-3 rounded-full border border-white shadow-sm transition-all ${idx === activeImageIdx ? 'bg-brand-yellow w-8' : 'bg-white/50 hover:bg-white'}`}
+                        />
+                      ))}
+                    </div>
+                  </>
                 )}
                 
                 <div className="absolute top-4 left-4">
