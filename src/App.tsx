@@ -5,6 +5,7 @@ import { Footer } from "./components/Footer";
 import { Home } from "./pages/Home";
 import { Catalog } from "./pages/Catalog";
 import { Location } from "./pages/Location";
+import About from "./pages/About";
 import { Admin } from "./pages/Admin";
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/katalog" element={<Catalog />} />
                   <Route path="/lokasi" element={<Location />} />
+                  <Route path="/tentang-kami" element={<About />} />
                 </Routes>
               </div>
               <Footer />
