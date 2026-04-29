@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "Motor": {
+      "title": "Motor",
+      "description": "Kendaraan motor bekas yang dijual di Sammy Motor",
+      "type": "object",
+      "properties": {
+        "brand": { "type": "string" },
+        "model": { "type": "string" },
+        "year": { "type": "number" },
+        "price": { "type": "number" },
+        "mileage": { "type": "number" },
+        "engine": { "type": "string" },
+        "color": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "minDownPayment": { "type": "number" },
+        "status": { "type": "string", "enum": ["Available", "Booking", "Sold"] },
+        "createdAt": { "type": "string", "description": "Timestamp" },
+        "updatedAt": { "type": "string", "description": "Timestamp" }
+      },
+      "required": ["brand", "model", "year", "price", "status"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Data transaksi kredit atau booking",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["Booking", "Kredit"] },
+        "motorId": { "type": "string" },
+        "motorName": { "type": "string" },
+        "customerName": { "type": "string" },
+        "phone": { "type": "string" },
+        "branch": { "type": "string" },
+        "status": { "type": "string", "enum": ["Pending", "Approved", "Rejected", "Completed"] },
+        "downPayment": { "type": "number" },
+        "tenor": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["type", "motorId", "customerName", "phone", "status"]
+    },
+    "AdminConfig": {
+      "title": "AdminConfig",
+      "description": "Email-email admin yang diizinkan",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/motors/{motorId}": {
+      "schema": { "$ref": "#/entities/Motor" },
+      "description": "Koleksi katalog motor"
+    },
+    "/transactions/{transactionId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Koleksi transaksi (booking/kredit)"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/AdminConfig" },
+      "description": "Daftar UUID admin"
+    }
+  }
+}
