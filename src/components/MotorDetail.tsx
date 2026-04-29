@@ -1,5 +1,5 @@
 import { ArrowLeft, CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Motor } from "../data/motors";
 import { formatCurrency } from "../utils/format";
 import { CreditSimulation } from "./CreditSimulation";
