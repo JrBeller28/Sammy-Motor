@@ -17,7 +17,7 @@ export function Home() {
      const q = query(
        collection(db, "motors"), 
        where("status", "in", ["Tersedia", "Available"]),
-       limit(3)
+       limit(6)
      );
      const unsub = onSnapshot(q, (snap) => {
         setFeaturedMotors(snap.docs.map(t => ({ id: t.id, ...t.data() } as Motor)));
