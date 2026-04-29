@@ -87,6 +87,9 @@ export function Catalog() {
 
   // Get unique brands dynamically plus static defaults
   const uniqueBrands = ["Semua Merk", ...Array.from(new Set(motors.map(m => m.brand))).filter(b => b)];
+  
+  // Get unique branches dynamically plus static defaults (BAGIAN YANG DITAMBAHKAN)
+  const uniqueBranches = ["Semua Cabang", ...Array.from(new Set(motors.map(m => m.branch))).filter(b => b)];
 
   return (
     <main className="pt-32 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen bg-gray-50/30">
@@ -106,10 +109,12 @@ export function Catalog() {
             onChange={(e) => setSelectedBranch(e.target.value)}
             className="bg-white border border-gray-200 rounded-lg px-4 py-2.5 font-bold text-sm outline-none text-brand-black shadow-sm flex-1 lg:flex-none"
           >
-            <option value="Semua Cabang">Semua Cabang</option>
-            <option value="Pusat">Cabang Pusat</option>
-            <option value="Jatiuwung">Cabang Jatiuwung</option>
-            <option value="Rajeg">Cabang Rajeg</option>
+            {/* OPSI CABANG DIMAPPING SECARA DINAMIS */}
+            {uniqueBranches.map((branchName) => (
+              <option key={branchName} value={branchName}>
+                {branchName === "Semua Cabang" ? "Semua Cabang" : `Cabang ${branchName.replace('Cabang ', '')}`}
+              </option>
+            ))}
           </select>
         </div>
 
