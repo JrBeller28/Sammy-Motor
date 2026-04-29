@@ -16,7 +16,7 @@ export function Admin() {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
 
-  const [activeTab, setActiveTab] = useState<'dashboard'|'motors'|'transactions'|'reports'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard'|'motors'|'bookings'|'transactions'|'reports'>('dashboard');
   const [reportMonth, setReportMonth] = useState<string>("All");
   const [reportYear, setReportYear] = useState<string>(new Date().getFullYear().toString());
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -157,6 +157,56 @@ export function Admin() {
       fetchData();
     } catch (e) {
       alert("Gagal update data");
+    }
+  }
+
+  const updateBookingStatus = async (booking: any, newStatus: "Terjual" | "Cancel") => {
+    try {
+      setIsLoading(true);
+      if (newStatus === "Terjual") {
+        let m = motorsList.find(x => x.id === booking.motorId);
+        
+        await updateDoc(doc(db, "transactions", booking.id), { status: "Completed", updatedAt: new Date().toISOString() });
+        
+        await addDoc(collection(db, "transactions"), {
+          motorName: booking.motorName, 
+          motorId: booking.motorId,
+          customerName: booking.customerName,
+          phone: booking.phone,
+          type: booking.type, // Credit/Booking
+          address: "", 
+          recordType: 'Penjualan',
+          status: 'Completed',
+          hargaJual: m ? m.price : 0,
+          profit: 0,
+          catatan: "Penjualan otomatis dari Data Booking",
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          branch: booking.branch
+        });
+        
+        if (booking.motorId) {
+          await updateDoc(doc(db, "motors", booking.motorId), { 
+            status: "Terjual", 
+            updatedAt: new Date().toISOString() 
+          });
+        }
+        alert("Booking berhasil diubah ke Penjualan");
+      } else if (newStatus === "Cancel") {
+        await updateDoc(doc(db, "transactions", booking.id), { status: "Rejected", updatedAt: new Date().toISOString() });
+        if (booking.motorId) {
+          await updateDoc(doc(db, "motors", booking.motorId), { 
+            status: "Tersedia", 
+            updatedAt: new Date().toISOString() 
+          });
+        }
+        alert("Booking dibatalkan. Motor kembali Tersedia.");
+      }
+      fetchData();
+    } catch (e) {
+      alert("Terjadi kesalahan.");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -389,6 +439,12 @@ export function Admin() {
             <Package className="w-4 h-4" /> Katalog Motor
           </button>
           <button 
+            onClick={() => { setActiveTab('bookings'); setIsSidebarOpen(false); }} 
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all text-sm font-semibold ${activeTab === 'bookings' ? 'bg-brand-yellow text-brand-black shadow-md' : 'text-gray-300 hover:bg-white/10'}`}
+          >
+            <FileText className="w-4 h-4" /> Data Booking
+          </button>
+          <button 
             onClick={() => { setActiveTab('transactions'); setIsSidebarOpen(false); }} 
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all text-sm font-semibold ${activeTab === 'transactions' ? 'bg-brand-yellow text-brand-black shadow-md' : 'text-gray-300 hover:bg-white/10'}`}
           >
@@ -423,6 +479,7 @@ export function Admin() {
             <h1 className="font-display text-lg sm:text-2xl text-gray-800 font-bold truncate">
               {activeTab === 'dashboard' ? 'Dashboard Statistik' :
                activeTab === 'motors' ? 'Kelola Katalog Motor' : 
+               activeTab === 'bookings' ? 'Data Booking' : 
                activeTab === 'transactions' ? 'Kelola Transaksi & Kredit' : 'Laporan Penjualan'}
             </h1>
           </div>
@@ -604,6 +661,93 @@ export function Admin() {
             </div>
           </div>
         )}
+
+        {activeTab === 'bookings' && (() => {
+          const bookingData = transactions.filter(t => t.recordType !== 'Penjualan' && (t.type === 'Booking' || t.type === 'Kredit'));
+          
+          return (
+            <div>
+              <div className="bg-white rounded-xl shadow border border-gray-200 overflow-x-auto">
+                <table className="w-full text-left text-sm whitespace-nowrap min-w-[1000px]">
+                  <thead className="bg-gray-100 uppercase text-xs font-semibold text-gray-600">
+                    <tr>
+                      <th className="px-6 py-4">Gambar</th>
+                      <th className="px-6 py-4">Brand/Model</th>
+                      <th className="px-6 py-4">Harga / Tahun</th>
+                      <th className="px-6 py-4">Info Pemesan</th>
+                      <th className="px-6 py-4">DP</th>
+                      <th className="px-6 py-4">Status & Cabang</th>
+                      <th className="px-6 py-4">Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {bookingData.map(b => {
+                      const m = motorsList.find(x => x.id === b.motorId);
+                      return (
+                        <tr key={b.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4">
+                            {m?.image ? <img src={m.image} alt={b.motorName} className="w-16 h-16 object-cover rounded shadow-sm border border-gray-200" /> : "-"}
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="font-bold text-brand-black">{b.motorName}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="font-semibold text-brand-black">{m ? `Rp ${m.price.toLocaleString('id-ID')}` : '-'}</p>
+                            <p className="text-gray-500">{m ? m.year : '-'}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="font-semibold text-brand-black">{b.customerName}</p>
+                            <p className="text-gray-500 text-xs">{b.phone}</p>
+                          </td>
+                          <td className="px-6 py-4 text-green-600 font-semibold border-x border-gray-100">
+                            Rp {(b.downPayment || 0).toLocaleString('id-ID')}
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`px-2 py-1 rounded text-xs font-bold uppercase tracking-wider ${
+                              b.status === 'Completed' ? 'bg-green-100 text-green-700' : b.status === 'Rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+                            }`}>
+                              {b.status}
+                            </span>
+                            <p className="text-gray-500 text-xs mt-2">{b.branch}</p>
+                          </td>
+                          <td className="px-6 py-4">
+                            {['Pending', 'Approved'].includes(b.status as string) && (
+                              <div className="flex flex-col gap-2 w-24">
+                                <button 
+                                  onClick={() => updateBookingStatus(b, 'Terjual')}
+                                  className="w-full text-center bg-green-100 text-green-700 hover:bg-green-200 py-1.5 px-3 rounded font-bold text-xs transition"
+                                >
+                                  Terjual
+                                </button>
+                                <button 
+                                  onClick={() => updateBookingStatus(b, 'Cancel')}
+                                  className="w-full text-center bg-red-100 text-red-700 hover:bg-red-200 py-1.5 px-3 rounded font-bold text-xs transition"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            )}
+                            {b.status === 'Completed' && (
+                              <span className="text-green-600 font-bold text-sm">Selesai (Terjual)</span>
+                            )}
+                            {b.status === 'Rejected' && (
+                              <span className="text-red-500 font-bold text-sm">Dibatalkan</span>
+                            )}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                    {bookingData.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="text-center py-8 text-gray-500">Belum ada data booking.</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )
+        })()}
 
         {activeTab === 'transactions' && (() => {
           const salesData = transactions.filter(t => t.recordType === 'Penjualan');
