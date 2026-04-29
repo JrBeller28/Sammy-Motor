@@ -44,6 +44,7 @@ export function Navbar() {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/" className={`font-sans text-sm font-semibold transition-colors tracking-wide uppercase ${isActive('/') ? 'text-brand-yellow' : 'text-white hover:text-brand-yellow'}`}>Beranda</Link>
+            <Link to="/tentang-kami" className={`font-sans text-sm font-semibold transition-colors tracking-wide uppercase ${isActive('/tentang-kami') ? 'text-brand-yellow' : 'text-white hover:text-brand-yellow'}`}>Tentang Kami</Link>
             <Link to="/katalog" className={`font-sans text-sm font-semibold transition-colors tracking-wide uppercase ${isActive('/katalog') ? 'text-brand-yellow' : 'text-white hover:text-brand-yellow'}`}>Katalog Motor</Link>
             <Link to="/lokasi" className={`font-sans text-sm font-semibold transition-colors tracking-wide uppercase ${isActive('/lokasi') ? 'text-brand-yellow' : 'text-white hover:text-brand-yellow'}`}>Lokasi Toko</Link>
             
@@ -99,6 +100,10 @@ export function Navbar() {
           <Link to="/" className={`font-sans text-base font-bold transition-colors uppercase tracking-widest flex items-center justify-between group ${isActive('/') ? 'text-brand-yellow' : 'text-white hover:text-brand-yellow'}`} onClick={closeMobileMenu}>
             Beranda
             <Bike className={`w-5 h-5 transition-transform ${isActive('/') ? 'opacity-100 scale-110' : 'opacity-0 group-hover:opacity-100'}`} />
+          </Link>
+          <Link to="/tentang-kami" className={`font-sans text-base font-bold transition-colors uppercase tracking-widest flex items-center justify-between group ${isActive('/tentang-kami') ? 'text-brand-yellow' : 'text-white hover:text-brand-yellow'}`} onClick={() => setIsOpen(false)}>
+            Tentang Kami
+            <Bike className={`w-5 h-5 transition-transform ${isActive('/tentang-kami') ? 'opacity-100 scale-110' : 'opacity-0 group-hover:opacity-100'}`} />
           </Link>
           <Link to="/katalog" className={`font-sans text-base font-bold transition-colors uppercase tracking-widest flex items-center justify-between group ${isActive('/katalog') ? 'text-brand-yellow' : 'text-white hover:text-brand-yellow'}`} onClick={closeMobileMenu}>
             Katalog Motor
